@@ -1,0 +1,23 @@
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/board_db
+    username: n
+    password: p
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+server:
+  servlet:
+    session:
+      tracking-modes: cookie
