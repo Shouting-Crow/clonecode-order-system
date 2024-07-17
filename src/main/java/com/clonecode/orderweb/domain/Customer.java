@@ -26,4 +26,7 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private List<Order> orderList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "customer")
+    private List<Review> reviews;
+
 }

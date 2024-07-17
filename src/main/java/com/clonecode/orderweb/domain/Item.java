@@ -26,4 +26,12 @@ public class Item {
 
     @Enumerated(EnumType.STRING)
     private ItemType itemType;
+
+    private String description;
+
+    @ElementCollection
+    private List<String> imageUrls;
+
+    @OneToMany(mappedBy = "item")
+    private List<Review> reviews;
 }
