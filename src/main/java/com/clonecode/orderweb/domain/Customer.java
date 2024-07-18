@@ -16,11 +16,21 @@ public class Customer {
     private Long id;
     private String name;
     private String phoneNumber;
+    private String loginId;
+    private String password;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "city", column = @Column(name = "billing_city")),
+            @AttributeOverride(name = "streetAddress", column = @Column(name = "billing_street_address"))
+    })
     private Address billingAddress;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "city", column = @Column(name = "delivery_city")),
+            @AttributeOverride(name = "streetAddress", column = @Column(name = "delivery_street_address"))
+    })
     private Address deliveryAddress;
 
     @OneToMany(mappedBy = "customer")

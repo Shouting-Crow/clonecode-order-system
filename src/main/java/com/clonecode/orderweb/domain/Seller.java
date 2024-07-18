@@ -16,6 +16,8 @@ public class Seller {
     private Long id;
     private String name;
     private String phoneNumber;
+    private String loginId;
+    private String password;
 
     @Embedded
     private Address address;

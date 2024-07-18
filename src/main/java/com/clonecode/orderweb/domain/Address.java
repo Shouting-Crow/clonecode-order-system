@@ -6,4 +6,13 @@ import jakarta.persistence.Embeddable;
 public class Address {
     private String city;
     private String streetAddress;
+
+    public Address(String city, String streetAddress) {
+        this.city = city;
+        this.streetAddress = streetAddress;
+    }
+
+    protected Address() {
+
+    }
 }
