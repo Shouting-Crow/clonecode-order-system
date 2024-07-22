@@ -14,6 +14,10 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+
+    private String serialNumber;
+
     @OneToMany(mappedBy = "item")
     private List<OrderItem> orderItems;
 
@@ -22,15 +26,17 @@ public class Item {
     private Seller seller;
 
     private Long price;
-    private Long stockQuantity;
+    private Integer stockQuantity;
 
     @Enumerated(EnumType.STRING)
     private ItemType itemType;
 
     private String description;
 
+    private String thumbnailImage;
+
     @ElementCollection
-    private List<String> imageUrls;
+    private List<String> detailImages;
 
     @OneToMany(mappedBy = "item")
     private List<Review> reviews;
