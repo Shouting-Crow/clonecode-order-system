@@ -8,6 +8,7 @@
 <body>
 <div class="container mt-5">
     <h1 class="text-center">상품 목록</h1>
+    <a th:href="@{/item/register}" class="btn btn-primary">상품 등록</a>
     <table class="table table-hover mt-4">
         <thead>
         <tr>
@@ -23,6 +24,7 @@
             <td th:text="${item.name}"></td>
             <td th:text="${item.stockQuantity}"></td>
             <td th:text="${item.price} + ' 원'"></td>
+            <td><a th:href="@{/item/edit/{id}(id=${item.id})}" class="btn btn-warning">변경</a></td>
         </tr>
         </tbody>
     </table>

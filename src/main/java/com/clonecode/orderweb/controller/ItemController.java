@@ -4,6 +4,7 @@ import com.clonecode.orderweb.domain.Item;
 import com.clonecode.orderweb.domain.ItemType;
 import com.clonecode.orderweb.domain.Seller;
 import com.clonecode.orderweb.dto.ItemRegisterDto;
+import com.clonecode.orderweb.dto.ItemUpdateDto;
 import com.clonecode.orderweb.service.ItemService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -84,6 +82,61 @@ public class ItemController {
             return "item/register-list";
         }
         return "redirect:/";
+    }
+
+    @GetMapping("/item/edit/{id}")
+    public String showItemEditForm(@PathVariable(name = "id") Long id,
+                                   Model model,
+                                   HttpSession session){
+        Object loginMember = session.getAttribute("loginMember");
+        if (!(loginMember instanceof Seller)){
+            return "redirect:/";
+        }
+        ItemUpdateDto itemUpdateDto = itemService.getItemDto(id);
+        model.addAttribute("itemUpdateDto", itemUpdateDto);
+
+        Map<String, String> itemTypes = Arrays.stream(ItemType.values())
+                .collect(Collectors.toMap(Enum::name, ItemType::getKoreanName));
+
+        model.addAttribute("itemTypes", itemTypes);
+        return "item/edit";
+    }
+
+    @PostMapping("/item/edit")
+    public String updateItem(@ModelAttribute(name = "itemUpdateDto") ItemUpdateDto itemUpdateDto,
+                             RedirectAttributes redirectAttributes,
+                             HttpSession session){
+        Object loginMember = session.getAttribute("loginMember");
+        if (loginMember instanceof Seller seller){
+            itemUpdateDto.setSellerId(seller.getId());
+
+            if (itemUpdateDto.getThumbnailImage() != null && !itemUpdateDto.getThumbnailImage().isEmpty()){
+                String thumbnailImageUrl = saveImage(itemUpdateDto.getThumbnailImage());
+                itemUpdateDto.setThumbnailImageUrl(thumbnailImageUrl);
+            }
+
+            List<String> detailImageUrls = new ArrayList<>();
+            for (MultipartFile detailImage : itemUpdateDto.getDetailImages()){
+                if (!detailImage.isEmpty()){
+                    String detailImageUrl = saveImage(detailImage);
+                    detailImageUrls.add(detailImageUrl);
+                }
+            }
+            itemUpdateDto.setDetailImageUrls(detailImageUrls);
+
+            itemService.updateItem(itemUpdateDto);
+            redirectAttributes.addFlashAttribute("message", "상품이 성공적으로 수정되었습니다.");
+            return "redirect:/item/register-list";
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping("/item/delete/{id}")
+    public String deleteItem(@PathVariable(name = "id") Long id,
+                             RedirectAttributes redirectAttributes){
+        itemService.deleteItem(id);
+        redirectAttributes.addFlashAttribute("message", "상품이 성공적으로 삭제되었습니다.");
+        return "redirect:/item/register-list";
     }
 
     private String saveImage(MultipartFile image){

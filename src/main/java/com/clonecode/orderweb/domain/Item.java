@@ -18,7 +18,7 @@ public class Item {
 
     private String serialNumber;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
 
     @ManyToOne
@@ -36,8 +36,9 @@ public class Item {
     private String thumbnailImage;
 
     @ElementCollection
+    @CollectionTable(name = "item_detail_images", joinColumns = @JoinColumn(name = "item_id"))
     private List<String> detailImages;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
 }
