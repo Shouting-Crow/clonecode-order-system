@@ -3,6 +3,7 @@ package com.clonecode.orderweb.controller;
 import com.clonecode.orderweb.domain.Item;
 import com.clonecode.orderweb.domain.ItemType;
 import com.clonecode.orderweb.domain.Seller;
+import com.clonecode.orderweb.dto.ItemListDto;
 import com.clonecode.orderweb.dto.ItemRegisterDto;
 import com.clonecode.orderweb.dto.ItemUpdateDto;
 import com.clonecode.orderweb.service.ItemService;
@@ -137,6 +138,13 @@ public class ItemController {
         itemService.deleteItem(id);
         redirectAttributes.addFlashAttribute("message", "상품이 성공적으로 삭제되었습니다.");
         return "redirect:/item/register-list";
+    }
+
+    @GetMapping("/item/list")
+    public String showItemList(Model model){
+        List<ItemListDto> items = itemService.getItemList();
+        model.addAttribute("items", items);
+        return "item/list";
     }
 
     private String saveImage(MultipartFile image){
