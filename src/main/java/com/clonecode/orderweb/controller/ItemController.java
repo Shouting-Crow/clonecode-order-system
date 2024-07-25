@@ -5,6 +5,7 @@ import com.clonecode.orderweb.domain.ItemType;
 import com.clonecode.orderweb.domain.Seller;
 import com.clonecode.orderweb.dto.ItemListDto;
 import com.clonecode.orderweb.dto.ItemRegisterDto;
+import com.clonecode.orderweb.dto.ItemSearchDto;
 import com.clonecode.orderweb.dto.ItemUpdateDto;
 import com.clonecode.orderweb.service.ItemService;
 import jakarta.servlet.http.HttpSession;
@@ -143,6 +144,19 @@ public class ItemController {
     @GetMapping("/item/list")
     public String showItemList(Model model){
         List<ItemListDto> items = itemService.getItemList();
+        model.addAttribute("items", items);
+        return "item/list";
+    }
+
+    @GetMapping("/items")
+    public String searchItems(@RequestParam(value = "keyword", required = false) String keyword,
+                              @RequestParam(value = "itemType", required = false) ItemType itemType,
+                              Model model){
+        ItemSearchDto itemSearchDto = new ItemSearchDto();
+        itemSearchDto.setKeyword(keyword);
+        itemSearchDto.setItemType(itemType);
+
+        List<ItemListDto> items = itemService.searchItems(itemSearchDto);
         model.addAttribute("items", items);
         return "item/list";
     }

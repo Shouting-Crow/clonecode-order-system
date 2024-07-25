@@ -1,15 +1,17 @@
 package com.clonecode.orderweb.service;
 
 import com.clonecode.orderweb.domain.Item;
+import com.clonecode.orderweb.domain.QItem;
 import com.clonecode.orderweb.domain.Review;
 import com.clonecode.orderweb.dto.ItemListDto;
 import com.clonecode.orderweb.dto.ItemRegisterDto;
+import com.clonecode.orderweb.dto.ItemSearchDto;
 import com.clonecode.orderweb.dto.ItemUpdateDto;
 import com.clonecode.orderweb.repository.ItemRepository;
 import com.clonecode.orderweb.repository.ReviewRepository;
 import com.clonecode.orderweb.repository.SellerRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ public class ItemServiceImpl implements ItemService{
     private final ItemRepository itemRepository;
     private final SellerRepository sellerRepository;
     private final ReviewRepository reviewRepository;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     @Transactional
@@ -72,7 +75,31 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public List<ItemListDto> getItemList() {
         List<Item> items = itemRepository.findAll();
-        return items.stream().map(item ->{
+        return itemToListDto(items);
+    }
+
+    @Override
+    public List<ItemListDto> searchItems(ItemSearchDto itemSearchDto) {
+        QItem item = QItem.item;
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (itemSearchDto.getKeyword() != null && !itemSearchDto.getKeyword().isEmpty()){
+            builder.and(item.name.containsIgnoreCase(itemSearchDto.getKeyword()));
+        }
+
+        if (itemSearchDto.getItemType() != null){
+            builder.and(item.itemType.eq(itemSearchDto.getItemType()));
+        }
+
+        List<Item> items = queryFactory.selectFrom(item)
+                .where(builder)
+                .fetch();
+
+        return itemToListDto(items);
+    }
+
+    private List<ItemListDto> itemToListDto(List<Item> items) {
+        return items.stream().map(item -> {
             ItemListDto dto = new ItemListDto();
             dto.setId(item.getId());
             dto.setThumbnailImage(item.getThumbnailImage());
@@ -80,7 +107,7 @@ public class ItemServiceImpl implements ItemService{
             dto.setPrice(item.getPrice());
 
             List<Review> reviews = reviewRepository.findByItemId(item.getId());
-            if (!reviews.isEmpty()){
+            if (!reviews.isEmpty()) {
                 double averageRating = reviews.stream()
                         .mapToInt(Review::getRating)
                         .average()
