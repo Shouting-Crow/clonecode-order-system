@@ -13,6 +13,9 @@ import com.clonecode.orderweb.repository.SellerRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,13 +76,13 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
-    public List<ItemListDto> getItemList() {
-        List<Item> items = itemRepository.findAll();
-        return itemToListDto(items);
+    public Page<ItemListDto> getItemList(Pageable pageable) {
+        Page<Item> pagedItems = itemRepository.findAll(pageable);
+        return pagedItems.map(this::convertToDto);
     }
 
     @Override
-    public List<ItemListDto> searchItems(ItemSearchDto itemSearchDto) {
+    public Page<ItemListDto> searchItems(ItemSearchDto itemSearchDto, Pageable pageable) {
         QItem item = QItem.item;
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -91,35 +94,43 @@ public class ItemServiceImpl implements ItemService{
             builder.and(item.itemType.eq(itemSearchDto.getItemType()));
         }
 
+        long totalCount = queryFactory.selectFrom(item)
+                .where(builder)
+                .fetch().size();
+
         List<Item> items = queryFactory.selectFrom(item)
                 .where(builder)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
-        return itemToListDto(items);
+        List<ItemListDto> itemDtos = items.stream()
+                .map(this::convertToDto)
+                .toList();
+
+        return new PageImpl<>(itemDtos, pageable, totalCount);
     }
 
-    private List<ItemListDto> itemToListDto(List<Item> items) {
-        return items.stream().map(item -> {
-            ItemListDto dto = new ItemListDto();
-            dto.setId(item.getId());
-            dto.setThumbnailImage(item.getThumbnailImage());
-            dto.setName(item.getName());
-            dto.setPrice(item.getPrice());
+    private ItemListDto convertToDto(Item item) {
+        ItemListDto dto = new ItemListDto();
+        dto.setId(item.getId());
+        dto.setThumbnailImage(item.getThumbnailImage());
+        dto.setName(item.getName());
+        dto.setPrice(item.getPrice());
 
-            List<Review> reviews = reviewRepository.findByItemId(item.getId());
-            if (!reviews.isEmpty()) {
-                double averageRating = reviews.stream()
-                        .mapToInt(Review::getRating)
-                        .average()
-                        .orElse(0.0);
-                dto.setAverageRating(averageRating);
-                dto.setReviewCount((long) reviews.size());
-            } else {
-                dto.setAverageRating(0.0);
-                dto.setReviewCount(0L);
-            }
-            return dto;
-        }).collect(Collectors.toList());
+        List<Review> reviews = reviewRepository.findByItemId(item.getId());
+        if (!reviews.isEmpty()) {
+            double averageRating = reviews.stream()
+                    .mapToInt(Review::getRating)
+                    .average()
+                    .orElse(0.0);
+            dto.setAverageRating(averageRating);
+            dto.setReviewCount((long) reviews.size());
+        } else {
+            dto.setAverageRating(0.0);
+            dto.setReviewCount(0L);
+        }
+        return dto;
     }
 
     private void makeItem(ItemRegisterDto itemRegisterDto, Item item) {

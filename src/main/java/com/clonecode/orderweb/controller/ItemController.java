@@ -11,6 +11,9 @@ import com.clonecode.orderweb.service.ItemService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -142,22 +145,32 @@ public class ItemController {
     }
 
     @GetMapping("/item/list")
-    public String showItemList(Model model){
-        List<ItemListDto> items = itemService.getItemList();
-        model.addAttribute("items", items);
+    public String showItemList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ItemListDto> pagedItems = itemService.getItemList(pageable);
+        model.addAttribute("items", pagedItems.getContent());
+        model.addAttribute("page", pagedItems);
         return "item/list";
     }
 
     @GetMapping("/items")
     public String searchItems(@RequestParam(value = "keyword", required = false) String keyword,
                               @RequestParam(value = "itemType", required = false) ItemType itemType,
+                              @RequestParam(value = "page", defaultValue = "0") int page,
+                              @RequestParam(value = "size", defaultValue = "10") int size,
                               Model model){
         ItemSearchDto itemSearchDto = new ItemSearchDto();
         itemSearchDto.setKeyword(keyword);
         itemSearchDto.setItemType(itemType);
+        Pageable pageable = PageRequest.of(page, size);
 
-        List<ItemListDto> items = itemService.searchItems(itemSearchDto);
-        model.addAttribute("items", items);
+        Page<ItemListDto> pagedSearchItems = itemService.searchItems(itemSearchDto, pageable);
+        model.addAttribute("items", pagedSearchItems.getContent());
+        model.addAttribute("page", pagedSearchItems);
+
         return "item/list";
     }
 
