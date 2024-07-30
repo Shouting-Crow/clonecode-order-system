@@ -44,6 +44,13 @@
             width: 15px;
             height: 15px;
         }
+        .pagination {
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination .page-item {
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
@@ -56,10 +63,19 @@
             <input type="text" class="form-control" name="keyword" placeholder="검색어를 입력하세요">
             <select class="form-select" name="itemType">
                 <option value="">제품 타입 선택</option>
-                <option value="SNACK">간식</option>
-                <option value="CLOTHES">의류</option>
-                <option value="ELECTRONICS">전자제품</option>
-                <option value="BOOK">책</option>
+                <option value="SNACK" th:selected="${items.get(0).itemType == 'SNACK'}">간식</option>
+                <option value="CLOTHES" th:selected="${items.get(0).itemType == 'CLOTHES'}">의류</option>
+                <option value="ELECTRONICS" th:selected="${items.get(0).itemType == 'ELECTRONICS'}">전자제품</option>
+                <option value="BOOK" th:selected="${items.get(0).itemType == 'BOOK'}">책</option>
+            </select>
+            <select class="form-select" name="sortType">
+                <option value="">정렬 기준 선택</option>
+                <option value="priceAsc" th:selected="${sortType == 'priceAsc'}">가격 낮은순</option>
+                <option value="priceDesc" th:selected="${sortType == 'priceDesc'}">가격 높은순</option>
+                <option value="ratingAsc" th:selected="${sortType == 'ratingAsc'}">평점 낮은순</option>
+                <option value="ratingDesc" th:selected="${sortType == 'ratingDesc'}">평점 높은순</option>
+                <option value="reviewCountAsc" th:selected="${sortType == 'reviewCountAsc'}">리뷰수 낮은수</option>
+                <option value="reviewCountDesc" th:selected="${sortType == 'reviewCountDesc'}">리뷰수 높은수</option>
             </select>
             <button class="btn btn-primary" type="submit">검색</button>
         </div>
@@ -91,16 +107,16 @@
     <nav aria-label="Page navigation">
         <ul class="pagination">
             <li class="page-item" th:classappend="${page.hasPrevious()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{/item/list(page=${page.number - 1}, size=${page.size})}" aria-label="Previous">
+                <a class="page-link" th:href="@{/item/list(page=${page.number - 1}, size=${page.size}, sortType=${sortType})}" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
             <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
                 th:classappend="${i == page.number} ? 'active' : ''">
-                <a class="page-link" th:href="@{/item/list(page=${i}, size=${page.size})}" th:text="${i + 1}"></a>
+                <a class="page-link" th:href="@{/item/list(page=${i}, size=${page.size}, sortType=${sortType})}" th:text="${i + 1}"></a>
             </li>
             <li class="page-item" th:classappend="${page.hasNext()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{/item/list(page=${page.number + 1}, size=${page.size})}" aria-label="Next">
+                <a class="page-link" th:href="@{/item/list(page=${page.number + 1}, size=${page.size}, sortType=${sortType})}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

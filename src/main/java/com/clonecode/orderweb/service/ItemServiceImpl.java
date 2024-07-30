@@ -2,6 +2,7 @@ package com.clonecode.orderweb.service;
 
 import com.clonecode.orderweb.domain.Item;
 import com.clonecode.orderweb.domain.QItem;
+import com.clonecode.orderweb.domain.QReview;
 import com.clonecode.orderweb.domain.Review;
 import com.clonecode.orderweb.dto.ItemListDto;
 import com.clonecode.orderweb.dto.ItemRegisterDto;
@@ -11,6 +12,12 @@ import com.clonecode.orderweb.repository.ItemRepository;
 import com.clonecode.orderweb.repository.ReviewRepository;
 import com.clonecode.orderweb.repository.SellerRepository;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -84,6 +91,7 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public Page<ItemListDto> searchItems(ItemSearchDto itemSearchDto, Pageable pageable) {
         QItem item = QItem.item;
+        QReview review = QReview.review;
         BooleanBuilder builder = new BooleanBuilder();
 
         if (itemSearchDto.getKeyword() != null && !itemSearchDto.getKeyword().isEmpty()){
@@ -94,19 +102,35 @@ public class ItemServiceImpl implements ItemService{
             builder.and(item.itemType.eq(itemSearchDto.getItemType()));
         }
 
-        long totalCount = queryFactory.selectFrom(item)
+        JPQLQuery<Item> query = queryFactory
+                .selectFrom(item)
+                .leftJoin(item.reviews, review)
                 .where(builder)
-                .fetch().size();
-
-        List<Item> items = queryFactory.selectFrom(item)
-                .where(builder)
+                .groupBy(item.id)
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+                .limit(pageable.getPageSize());
+
+        if ("priceAsc".equals(itemSearchDto.getSortType())){
+            query.orderBy(item.price.asc());
+        } else if ("priceDesc".equals(itemSearchDto.getSortType())){
+            query.orderBy(item.price.desc());
+        } else if ("ratingAsc".equals(itemSearchDto.getSortType())){
+            query.orderBy(review.rating.avg().coalesce(0.0).asc());
+        } else if ("ratingDesc".equals(itemSearchDto.getSortType())){
+            query.orderBy(review.rating.avg().coalesce(0.0).desc());
+        } else if ("reviewCountAsc".equals(itemSearchDto.getSortType())){
+            query.orderBy(item.reviews.size().asc());
+        } else if ("reviewCountDesc".equals(itemSearchDto.getSortType())){
+            query.orderBy(item.reviews.size().desc());
+        }
+
+        List<Item> items = query.fetch();
 
         List<ItemListDto> itemDtos = items.stream()
                 .map(this::convertToDto)
                 .toList();
+
+        long totalCount = query.fetchCount();
 
         return new PageImpl<>(itemDtos, pageable, totalCount);
     }
@@ -117,6 +141,7 @@ public class ItemServiceImpl implements ItemService{
         dto.setThumbnailImage(item.getThumbnailImage());
         dto.setName(item.getName());
         dto.setPrice(item.getPrice());
+        dto.setItemType(item.getItemType());
 
         List<Review> reviews = reviewRepository.findByItemId(item.getId());
         if (!reviews.isEmpty()) {

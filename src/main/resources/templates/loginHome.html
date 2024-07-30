@@ -61,6 +61,15 @@
                 <option value="ELECTRONICS">전자제품</option>
                 <option value="BOOK">책</option>
             </select>
+            <select class="form-select" name="sortType">
+                <option value="">정렬 기준 선택</option>
+                <option value="priceAsc" th:selected="${sortType == 'priceAsc'}">가격 낮은순</option>
+                <option value="priceDesc" th:selected="${sortType == 'priceDesc'}">가격 높은순</option>
+                <option value="ratingAsc" th:selected="${sortType == 'ratingAsc'}">평점 낮은순</option>
+                <option value="ratingDesc" th:selected="${sortType == 'ratingDesc'}">평점 높은순</option>
+                <option value="reviewCountAsc" th:selected="${sortType == 'reviewCountAsc'}">리뷰수 낮은수</option>
+                <option value="reviewCountDesc" th:selected="${sortType == 'reviewCountDesc'}">리뷰수 높은수</option>
+            </select>
             <button class="btn btn-primary" type="submit">검색</button>
         </div>
     </form>

@@ -8,5 +8,5 @@ public class ItemSearchDto {
 
     private String keyword;
     private ItemType itemType;
-
+    private String sortType;
 }

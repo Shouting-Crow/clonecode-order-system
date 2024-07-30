@@ -148,28 +148,35 @@ public class ItemController {
     public String showItemList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
+            @RequestParam(value = "sortType", required = false) String sortType,
             Model model){
         Pageable pageable = PageRequest.of(page, size);
-        Page<ItemListDto> pagedItems = itemService.getItemList(pageable);
+        ItemSearchDto itemSearchDto = new ItemSearchDto();
+        itemSearchDto.setSortType(sortType);
+        Page<ItemListDto> pagedItems = itemService.searchItems(itemSearchDto, pageable);
         model.addAttribute("items", pagedItems.getContent());
         model.addAttribute("page", pagedItems);
+        model.addAttribute("sortType", sortType);
         return "item/list";
     }
 
     @GetMapping("/items")
     public String searchItems(@RequestParam(value = "keyword", required = false) String keyword,
                               @RequestParam(value = "itemType", required = false) ItemType itemType,
+                              @RequestParam(value = "sortType", required = false) String sortType,
                               @RequestParam(value = "page", defaultValue = "0") int page,
                               @RequestParam(value = "size", defaultValue = "10") int size,
                               Model model){
         ItemSearchDto itemSearchDto = new ItemSearchDto();
         itemSearchDto.setKeyword(keyword);
         itemSearchDto.setItemType(itemType);
+        itemSearchDto.setSortType(sortType);
         Pageable pageable = PageRequest.of(page, size);
 
         Page<ItemListDto> pagedSearchItems = itemService.searchItems(itemSearchDto, pageable);
         model.addAttribute("items", pagedSearchItems.getContent());
         model.addAttribute("page", pagedSearchItems);
+        model.addAttribute("sortType", sortType);
 
         return "item/list";
     }
