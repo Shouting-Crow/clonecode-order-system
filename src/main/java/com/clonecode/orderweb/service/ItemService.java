@@ -1,14 +1,12 @@
 package com.clonecode.orderweb.service;
 
 import com.clonecode.orderweb.domain.Item;
-import com.clonecode.orderweb.dto.ItemListDto;
-import com.clonecode.orderweb.dto.ItemRegisterDto;
-import com.clonecode.orderweb.dto.ItemSearchDto;
-import com.clonecode.orderweb.dto.ItemUpdateDto;
+import com.clonecode.orderweb.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ItemService {
     void registerItem(ItemRegisterDto itemRegisterDto);
@@ -18,4 +16,5 @@ public interface ItemService {
     ItemUpdateDto getItemDto(Long id);
     Page<ItemListDto> getItemList(Pageable pageable);
     Page<ItemListDto> searchItems(ItemSearchDto itemSearchDto, Pageable pageable);
+    Optional<ItemDetailDto> getItemDetail(Long itemId, Pageable pageable);
 }

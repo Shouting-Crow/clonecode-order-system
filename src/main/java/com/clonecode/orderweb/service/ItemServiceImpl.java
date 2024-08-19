@@ -4,10 +4,7 @@ import com.clonecode.orderweb.domain.Item;
 import com.clonecode.orderweb.domain.QItem;
 import com.clonecode.orderweb.domain.QReview;
 import com.clonecode.orderweb.domain.Review;
-import com.clonecode.orderweb.dto.ItemListDto;
-import com.clonecode.orderweb.dto.ItemRegisterDto;
-import com.clonecode.orderweb.dto.ItemSearchDto;
-import com.clonecode.orderweb.dto.ItemUpdateDto;
+import com.clonecode.orderweb.dto.*;
 import com.clonecode.orderweb.repository.ItemRepository;
 import com.clonecode.orderweb.repository.ReviewRepository;
 import com.clonecode.orderweb.repository.SellerRepository;
@@ -27,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -133,6 +131,11 @@ public class ItemServiceImpl implements ItemService{
         long totalCount = query.fetchCount();
 
         return new PageImpl<>(itemDtos, pageable, totalCount);
+    }
+
+    @Override
+    public Optional<ItemDetailDto> getItemDetail(Long itemId, Pageable pageable) {
+        return itemRepository.findItemDetailById(itemId, pageable);
     }
 
     private ItemListDto convertToDto(Item item) {

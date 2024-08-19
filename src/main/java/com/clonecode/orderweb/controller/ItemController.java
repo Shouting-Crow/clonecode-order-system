@@ -3,10 +3,7 @@ package com.clonecode.orderweb.controller;
 import com.clonecode.orderweb.domain.Item;
 import com.clonecode.orderweb.domain.ItemType;
 import com.clonecode.orderweb.domain.Seller;
-import com.clonecode.orderweb.dto.ItemListDto;
-import com.clonecode.orderweb.dto.ItemRegisterDto;
-import com.clonecode.orderweb.dto.ItemSearchDto;
-import com.clonecode.orderweb.dto.ItemUpdateDto;
+import com.clonecode.orderweb.dto.*;
 import com.clonecode.orderweb.service.ItemService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -179,6 +176,23 @@ public class ItemController {
         model.addAttribute("sortType", sortType);
 
         return "item/list";
+    }
+
+    @GetMapping("/item/detail/{itemId}")
+    public String getItemDetail(@PathVariable(name = "itemId") Long itemId,
+                                @RequestParam(value = "page", defaultValue = "0") int page,
+                                Model model){
+        int pageSize = 5;
+
+        Optional<ItemDetailDto> itemDetail = itemService.getItemDetail(itemId, PageRequest.of(page, pageSize));
+
+        if (itemDetail.isPresent()){
+            model.addAttribute("itemDetail", itemDetail.get());
+        } else {
+            return "redirect:/";
+        }
+
+        return "item/detail";
     }
 
     private String saveImage(MultipartFile image){
