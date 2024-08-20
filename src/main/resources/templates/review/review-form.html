@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>리뷰 작성</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        /* 기본 레이아웃 설정 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .product-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-info img {
+            width: 150px;
+            height: auto;
+            margin-right: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-info h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .product-info p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        /* 폼 스타일 */
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+            color: #333;
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        /* 버튼 스타일 */
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* 돌아가기 버튼 스타일 */
+        .back-btn {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-btn a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .back-btn a:hover {
+            color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+
+<h2>리뷰 작성</h2>
+
+<!-- 제품 정보 표시 -->
+<div class="product-info">
+    <img th:src="@{${item.thumbnailImage}}" alt="Product Image">
+    <div>
+        <h3 th:text="${item.name}"></h3>
+        <p>가격: <span th:text="${item.price}"></span> 원</p>
+        <p th:text="${item.description}"></p>
+    </div>
+</div>
+
+<!-- 리뷰 작성 폼 -->
+<form th:action="@{'/items/' + ${item.id} + '/reviews'}" method="post" th:object="${reviewRegisterDto}">
+    <!-- 별점 선택 -->
+    <label for="rating">별점:</label>
+    <select th:field="*{rating}" id="rating">
+        <option value="1">★☆☆☆☆</option>
+        <option value="2">★★☆☆☆</option>
+        <option value="3">★★★☆☆</option>
+        <option value="4">★★★★☆</option>
+        <option value="5">★★★★★</option>
+    </select>
+
+    <!-- 리뷰 텍스트 작성 -->
+    <label for="reviewText">리뷰 내용:</label>
+    <textarea th:field="*{reviewText}" id="reviewText" rows="5" placeholder="리뷰를 작성해주세요"></textarea>
+
+    <!-- 제출 버튼 -->
+    <button type="submit">리뷰 등록</button>
+</form>
+
+<!-- 돌아가기 버튼 -->
+<div class="back-btn">
+    <a th:href="@{'/item/detail/' + ${item.id}}">← 돌아가기</a>
+</div>
+
+</body>
+</html>

@@ -141,6 +141,26 @@
         .pagination a:hover {
             background-color: #0056b3;
         }
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .write-review-btn {
+            padding: 5px 10px;
+            font-size: 14px;
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .write-review-btn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -209,16 +229,19 @@
 
     <!-- 리뷰 섹션 -->
     <div class="reviews-section">
-        <h3>리뷰</h3>
+        <div class="reviews-header">
+            <h3>리뷰</h3>
+            <a th:href="@{/items/{itemId}/reviews/new(itemId=${itemDetail.id})}" class="btn btn-primary write-review-btn">리뷰 쓰기</a>
+        </div>
         <div class="review" th:each="review : ${itemDetail.reviews}">
             <h4 th:text="${review.customerName}">리뷰 작성자</h4>
             <div class="product-rating">
-                    <span th:each="star : ${#numbers.sequence(1, review.rating)}">
-                        <img src="/images/star-filled.png" alt="★">
-                    </span>
-                <span th:each="star : ${#numbers.sequence(review.rating + 1, 5)}">
-                        <img src="/images/star-empty.png" alt="☆">
-                    </span>
+                <span th:each="star : ${#numbers.sequence(1, review.rating)}">
+                <img src="/images/star-filled.png" alt="★">
+            </span>
+                <span th:each="star : ${#numbers.sequence(review.rating + 1, 5)}" th:if="${review.rating < 5}">
+                <img src="/images/star-empty.png" alt="☆">
+            </span>
             </div>
             <p th:text="${review.reviewText}"></p>
         </div>
