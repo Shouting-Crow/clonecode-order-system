@@ -15,4 +15,9 @@ public class Address {
     protected Address() {
 
     }
+
+    @Override
+    public String toString() {
+        return city + " " + streetAddress;
+    }
 }

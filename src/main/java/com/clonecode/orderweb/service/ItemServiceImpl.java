@@ -138,6 +138,12 @@ public class ItemServiceImpl implements ItemService{
         return itemRepository.findItemDetailById(itemId, pageable);
     }
 
+    @Override
+    public Item getItem(Long itemId) {
+        return itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+    }
+
     private ItemListDto convertToDto(Item item) {
         ItemListDto dto = new ItemListDto();
         dto.setId(item.getId());

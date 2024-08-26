@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>주문하기</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-info {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    .thumbnail {
+      width: 150px;
+      height: auto;
+      border-radius: 10px;
+      margin-right: 20px;
+    }
+
+    .product-details h3 {
+      margin: 0 0 10px;
+      color: #007bff;
+    }
+
+    .product-details p {
+      margin: 5px 0;
+      color: #555;
+    }
+
+    .shipping-info, .payment-method {
+      margin-bottom: 20px;
+    }
+
+    .shipping-info label,
+    .payment-method h4 {
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: block;
+      color: #333;
+    }
+
+    .shipping-info input[type="text"],
+    .payment-method input[type="radio"] {
+      margin-bottom: 10px;
+      padding: 10px;
+      width: calc(100% - 20px);
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .payment-method label {
+      margin-right: 15px;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      color: white;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+      border: none;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>주문하기</h2>
+
+  <!-- 상품 정보 -->
+  <div class="product-info">
+    <img th:src="@{${orderItemDto.thumbnailImage}}" alt="Product Thumbnail" class="thumbnail">
+    <div class="product-details">
+      <h3 th:text="${orderItemDto.itemName}">상품 이름</h3>
+      <p>가격: <span th:text="${orderItemDto.price}"></span> 원</p>
+      <p>수량: <span th:text="${orderItemDto.quantity}"></span></p>
+      <p>총 가격: <span th:text="${orderItemDto.totalPrice}"></span> 원</p>
+    </div>
+  </div>
+
+  <!-- 주문 폼 -->
+  <form th:action="@{/order}" method="post" th:object="${orderItemDto}">
+    <input type="hidden" th:field="*{itemId}" />
+    <input type="hidden" th:field="*{customerId}" />
+    <input type="hidden" th:field="*{price}" />
+    <input type="hidden" th:field="*{quantity}" />
+    <input type="hidden" th:field="*{paymentMethod}" />
+
+    <!-- 배송지 정보 -->
+    <div class="shipping-info">
+      <label for="deliveryAddress">배송지:</label>
+      <input type="text" id="deliveryAddress" th:field="${deliveryDto.deliveryAddress}" required />
+    </div>
+
+    <!-- 결제 수단 선택 -->
+    <div class="payment-method">
+      <h4>결제 수단 선택:</h4>
+      <label>
+        <input type="radio" th:field="*{paymentMethod}" value="CREDIT_CARD" required />
+        신용카드
+      </label>
+      <label>
+        <input type="radio" th:field="*{paymentMethod}" value="BANK_TRANSFER" required />
+        계좌 이체
+      </label>
+      <label>
+        <input type="radio" th:field="*{paymentMethod}" value="MOBILE_PAYMENT" required />
+        휴대폰 결제
+      </label>
+    </div>
+
+    <!-- 버튼 -->
+    <div class="buttons">
+      <button type="submit" class="btn btn-primary">주문하기</button>
+      <a th:href="@{'/item/detail/' + ${orderItemDto.itemId}}" class="btn btn-secondary">취소하기</a>
+    </div>
+  </form>
+</div>
+</body>
+</html>

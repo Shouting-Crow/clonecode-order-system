@@ -17,4 +17,5 @@ public interface ItemService {
     Page<ItemListDto> getItemList(Pageable pageable);
     Page<ItemListDto> searchItems(ItemSearchDto itemSearchDto, Pageable pageable);
     Optional<ItemDetailDto> getItemDetail(Long itemId, Pageable pageable);
+    Item getItem(Long itemId);
 }

@@ -202,8 +202,11 @@
 
     <!-- 구매 및 장바구니 버튼 -->
     <div class="purchase-options">
-        <input type="number" min="1" max="100" value="1">
-        <button class="btn-buy">구매하기</button>
+        <form id="purchaseForm" th:action="@{'/order'}" method="get">
+            <input type="hidden" name="itemId" th:value="${itemDetail.id}">
+            <input type="number" id="quantity" name="quantity" min="1" max="100" value="1">
+            <button class="btn-buy">구매하기</button>
+        </form>
         <button class="btn-cart">장바구니 담기</button>
     </div>
 
