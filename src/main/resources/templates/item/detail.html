@@ -252,12 +252,15 @@
         </div>
     </div>
 
-    <!-- 리뷰 페이지네이션 -->
-<!--    <div class="pagination">-->
-<!--            <span th:each="pageNum : ${#numbers.sequence(0, itemDetail.reviewPageCount)}">-->
-<!--                <a th:href="@{'/detail/' + ${itemDetail.id} + '?page=' + ${pageNum}}" th:text="${pageNum + 1}"></a>-->
-<!--            </span>-->
-<!--    </div>-->
+    <div class="pagination">
+        <a th:if="${pagedReviews.hasPrevious()}"
+           th:href="@{'/item/detail/' + ${itemDetail.id} + '?page=' + ${pagedReviews.number - 1} + '&size=' + ${pagedReviews.size}}">이전</a>
+
+        <span th:text="'페이지 ' + ${pagedReviews.number + 1} + ' / ' + ${pagedReviews.totalPages}"></span>
+
+        <a th:if="${pagedReviews.hasNext()}"
+           th:href="@{'/item/detail/' + ${itemDetail.id} + '?page=' + ${pagedReviews.number + 1} + '&size=' + ${pagedReviews.size}}">다음</a>
+    </div>
 </div>
 </body>
 </html>

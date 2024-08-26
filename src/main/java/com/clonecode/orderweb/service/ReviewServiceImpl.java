@@ -3,11 +3,14 @@ package com.clonecode.orderweb.service;
 import com.clonecode.orderweb.domain.Customer;
 import com.clonecode.orderweb.domain.Item;
 import com.clonecode.orderweb.domain.Review;
+import com.clonecode.orderweb.dto.ReviewDto;
 import com.clonecode.orderweb.dto.ReviewRegisterDto;
 import com.clonecode.orderweb.repository.CustomerRepository;
 import com.clonecode.orderweb.repository.ItemRepository;
 import com.clonecode.orderweb.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +57,17 @@ public class ReviewServiceImpl implements ReviewService {
         } else {
             throw new IllegalStateException("리뷰를 찾을 수 없습니다.");
         }
+    }
+
+    @Override
+    public Page<ReviewDto> getPagedReviews(Long itemId, Pageable pageable) {
+
+        Page<Review> reviewPage = reviewRepository.findByItemId(itemId, pageable);
+
+        Page<ReviewDto> reviewDtoPage = reviewPage.map(review ->
+                new ReviewDto(review.getId(), review.getCustomer().getName(), review.getRating(), review.getReviewText()));
+
+        return reviewDtoPage;
     }
 }
 

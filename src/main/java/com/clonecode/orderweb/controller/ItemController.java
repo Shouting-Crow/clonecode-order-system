@@ -6,6 +6,7 @@ import com.clonecode.orderweb.domain.ItemType;
 import com.clonecode.orderweb.domain.Seller;
 import com.clonecode.orderweb.dto.*;
 import com.clonecode.orderweb.service.ItemService;
+import com.clonecode.orderweb.service.ReviewService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 public class ItemController {
 
     private final ItemService itemService;
+    private final ReviewService reviewService;
     private final String uploadDir = "src/main/resources/static/item-images/";
 
     @GetMapping("/item/register")
@@ -182,9 +184,9 @@ public class ItemController {
     @GetMapping("/item/detail/{itemId}")
     public String getItemDetail(@PathVariable(name = "itemId") Long itemId,
                                 @RequestParam(value = "page", defaultValue = "0") int page,
+                                @RequestParam(value = "size", defaultValue = "5") int size,
                                 Model model,
                                 HttpSession session){
-        int pageSize = 5;
 
         Customer loginMember = (Customer) session.getAttribute("loginMember");
 
@@ -192,10 +194,12 @@ public class ItemController {
             model.addAttribute("loginMember", loginMember);
         }
 
-        Optional<ItemDetailDto> itemDetail = itemService.getItemDetail(itemId, PageRequest.of(page, pageSize));
+        Optional<ItemDetailDto> itemDetail = itemService.getItemDetail(itemId, PageRequest.of(page, size));
 
         if (itemDetail.isPresent()){
             model.addAttribute("itemDetail", itemDetail.get());
+            Page<ReviewDto> pagedReviews = reviewService.getPagedReviews(itemId, PageRequest.of(page, size));
+            model.addAttribute("pagedReviews", pagedReviews);
         } else {
             return "redirect:/";
         }
