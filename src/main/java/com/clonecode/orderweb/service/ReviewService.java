@@ -4,4 +4,5 @@ import com.clonecode.orderweb.dto.ReviewRegisterDto;
 
 public interface ReviewService {
     void registerReview(Long itemId, Long customerId, ReviewRegisterDto reviewRegisterDto);
+    void deleteReview(Long reviewId, Long customerId);
 }

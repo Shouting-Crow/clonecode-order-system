@@ -58,4 +58,19 @@ public class ReviewController {
 
         return "redirect:/item/detail/" + itemId;
     }
+
+    @PostMapping("/items/{itemId}/reviews/{reviewId}/delete")
+    public String deleteReview(@PathVariable(name = "itemId") Long itemId,
+                               @PathVariable(name = "reviewId") Long reviewId,
+                               HttpSession session){
+        Customer customer = (Customer) session.getAttribute("loginMember");
+
+        if (customer == null){
+            return "redirect:/login";
+        }
+
+        reviewService.deleteReview(reviewId, customer.getId());
+
+        return "redirect:/item/detail/" + itemId;
+    }
 }

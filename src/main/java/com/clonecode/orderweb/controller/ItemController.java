@@ -1,5 +1,6 @@
 package com.clonecode.orderweb.controller;
 
+import com.clonecode.orderweb.domain.Customer;
 import com.clonecode.orderweb.domain.Item;
 import com.clonecode.orderweb.domain.ItemType;
 import com.clonecode.orderweb.domain.Seller;
@@ -181,8 +182,15 @@ public class ItemController {
     @GetMapping("/item/detail/{itemId}")
     public String getItemDetail(@PathVariable(name = "itemId") Long itemId,
                                 @RequestParam(value = "page", defaultValue = "0") int page,
-                                Model model){
+                                Model model,
+                                HttpSession session){
         int pageSize = 5;
+
+        Customer loginMember = (Customer) session.getAttribute("loginMember");
+
+        if (loginMember != null){
+            model.addAttribute("loginMember", loginMember);
+        }
 
         Optional<ItemDetailDto> itemDetail = itemService.getItemDetail(itemId, PageRequest.of(page, pageSize));
 

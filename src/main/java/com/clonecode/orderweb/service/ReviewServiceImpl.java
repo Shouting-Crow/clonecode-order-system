@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
@@ -35,6 +37,23 @@ public class ReviewServiceImpl implements ReviewService {
         review.setReviewText(reviewRegisterDto.getReviewText());
 
         reviewRepository.save(review);
+    }
+
+    @Override
+    @Transactional
+    public void deleteReview(Long reviewId, Long customerId) {
+        Optional<Review> reviewOptional = reviewRepository.findById(reviewId);
+        if (reviewOptional.isPresent()){
+            Review review = reviewOptional.get();
+
+            if (review.getCustomer().getId().equals(customerId)) {
+                reviewRepository.deleteById(reviewId);
+            } else {
+                throw new IllegalStateException("리뷰를 삭제할 권한이 없습니다.");
+            }
+        } else {
+            throw new IllegalStateException("리뷰를 찾을 수 없습니다.");
+        }
     }
 }
 

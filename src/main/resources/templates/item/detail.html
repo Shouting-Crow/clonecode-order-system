@@ -244,6 +244,11 @@
             </span>
             </div>
             <p th:text="${review.reviewText}"></p>
+            <div th:if="${loginMember?.name == review.customerName}">
+                <form th:action="@{'/items/' + ${itemDetail.id} + '/reviews/' + ${review.reviewId} + '/delete'}" method="post">
+                    <button type="submit" class="btn btn-danger">X</button>
+                </form>
+            </div>
         </div>
     </div>
 

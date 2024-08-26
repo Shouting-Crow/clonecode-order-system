@@ -35,7 +35,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .fetchOne();
 
         List<ReviewDto> reviews = queryFactory.select(Projections.constructor(ReviewDto.class,
-                        review.customer.name, review.rating, review.reviewText))
+                        review.id, review.customer.name, review.rating, review.reviewText))
                 .from(review)
                 .where(review.item.eq(itemEntity))
                 .offset(pageable.getOffset())
