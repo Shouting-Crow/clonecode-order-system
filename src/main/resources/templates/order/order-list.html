@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>주문 내역</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h2>주문 내역</h2>
+<table>
+    <thead>
+    <tr>
+        <th>주문 번호</th>
+        <th>주문 날짜</th>
+        <th>상품 이름</th>
+        <th>주문 수량</th>
+        <th>총 가격</th>
+        <th>주문 상태</th>
+        <th>취소/삭제</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.orderId}">주문번호</td>
+        <td th:text="${order.orderDate}">날짜</td>
+        <td th:text="${order.itemName}">상품이름</td>
+        <td th:text="${order.quantity}">구매수량</td>
+        <td th:text="${order.totalPrice}">금액</td>
+        <td>
+            <span th:if="${order.orderStatus == 'FINISHED'}">주문완료</span>
+            <span th:if="${order.orderStatus == 'CANCELED'}">취소</span>
+            <span th:if="${order.orderStatus == 'DELIVERING'}">배송중</span>
+        </td>
+        <td>
+            <form th:action="@{/order/cancel}" method="post" th:if="${order.orderStatus == 'FINISHED'}">
+                <input type="hidden" name="orderId" th:value="${order.orderId}" />
+                <button type="submit" class="btn btn-danger">취소</button>
+            </form>
+            <form th:action="@{/order/delete}" method="post" th:if="${order.orderStatus == 'CANCELED'}">
+                <input type="hidden" name="orderId" th:value="${order.orderId}" />
+                <button type="submit" class="btn btn-danger">삭제</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a href="/" class="btn">홈으로</a>
+</body>
+</html>

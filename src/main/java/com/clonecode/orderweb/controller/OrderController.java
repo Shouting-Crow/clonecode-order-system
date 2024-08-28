@@ -4,6 +4,7 @@ import com.clonecode.orderweb.domain.Customer;
 import com.clonecode.orderweb.domain.DeliveryStatus;
 import com.clonecode.orderweb.domain.Item;
 import com.clonecode.orderweb.domain.Order;
+import com.clonecode.orderweb.dto.CustomerOrderDto;
 import com.clonecode.orderweb.dto.DeliveryDto;
 import com.clonecode.orderweb.dto.OrderItemDto;
 import com.clonecode.orderweb.service.ItemService;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -81,6 +84,38 @@ public class OrderController {
         model.addAttribute("totalPrice", order.getOrderItems().get(0).getOrderPrice());
 
         return "order/order-success";
+    }
+
+    @GetMapping("/orders")
+    public String getCustomerOrders(HttpSession session, Model model){
+        Customer customer = (Customer) session.getAttribute("loginMember");
+        if (customer == null) {
+            return "redirect:/login";
+        }
+
+        List<CustomerOrderDto> orders = orderService.getCustomerOrders(customer.getId());
+        model.addAttribute("orders", orders);
+
+        return "order/order-list";
+    }
+
+    @PostMapping("/order/cancel")
+    public String cancelOrder(@RequestParam(name = "orderId") Long orderId,
+                              HttpSession session){
+        Customer customer = (Customer) session.getAttribute("loginMember");
+        if (customer == null){
+            return "redirect:/login";
+        }
+
+        orderService.cancelOrder(orderId, customer.getId());
+
+        return "redirect:/orders";
+    }
+
+    @PostMapping("/order/delete")
+    public String deleteOrder(@RequestParam(name = "orderId") Long orderId){
+        orderService.deleteOrder(orderId);
+        return "redirect:/orders";
     }
 
 

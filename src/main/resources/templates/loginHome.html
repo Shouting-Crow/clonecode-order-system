@@ -43,6 +43,9 @@
                         <li><a class="dropdown-item" href="/item/register-list">상품 목록</a></li>
                     </ul>
                 </li>
+                <li class="nav-item" th:if="${loginMember != null}">
+                    <a class="nav-link btn btn-outline-primary" href="/orders">내 주문 내역 보기</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link btn btn-outline-danger" href="/logout">로그아웃</a>
                 </li>
