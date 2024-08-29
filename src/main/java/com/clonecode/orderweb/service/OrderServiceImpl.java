@@ -4,6 +4,7 @@ import com.clonecode.orderweb.domain.*;
 import com.clonecode.orderweb.dto.CustomerOrderDto;
 import com.clonecode.orderweb.dto.DeliveryDto;
 import com.clonecode.orderweb.dto.OrderItemDto;
+import com.clonecode.orderweb.dto.SellerOrderDto;
 import com.clonecode.orderweb.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -116,6 +117,54 @@ public class OrderServiceImpl implements OrderService{
     @Transactional
     public void deleteOrder(Long orderId) {
         orderRepository.deleteById(orderId);
+    }
+
+    @Override
+    public List<SellerOrderDto> getOrdersBySellerId(Long sellerId) {
+        List<Order> orders = orderRepository.findByOrderItemsItemSellerId(sellerId);
+        return orders.stream().map(this::convertToSellerOrderDto).toList();
+    }
+
+    @Override
+    @Transactional
+    public void deliveryOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+        order.setOrderStatus(OrderStatus.DELIVERING);
+        orderRepository.save(order);
+    }
+
+    @Override
+    @Transactional
+    public void cancelSellerOrder(Long orderId, Long sellerId){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문이 존재하지 않습니다."));
+
+        if (!order.getOrderItems().get(0).getItem().getSeller().getId().equals(sellerId)){
+            throw new IllegalArgumentException("취소할 권한이 없습니다.");
+        }
+
+        if (order.getOrderStatus() == OrderStatus.DELIVERING){
+            throw new IllegalStateException("배송 중인 주문을 취소할 수는 없습니다.");
+        }
+
+        order.setOrderStatus(OrderStatus.CANCELED);
+        orderRepository.save(order);
+    }
+
+    private SellerOrderDto convertToSellerOrderDto(Order order){
+        SellerOrderDto dto = new SellerOrderDto();
+        dto.setOrderId(order.getId());
+        dto.setItemId(order.getOrderItems().get(0).getItem().getId());
+        dto.setItemName(order.getOrderItems().get(0).getItem().getName());
+        dto.setQuantity(order.getOrderItems().get(0).getOrderCount());
+        dto.setTotalPrice(order.getOrderItems().get(0).getOrderPrice() * order.getOrderItems().get(0).getOrderCount());
+        dto.setOrderStatus(order.getOrderStatus().toString());
+        dto.setCustomerName(order.getCustomer().getName());
+        dto.setCustomerPhoneNumber(order.getCustomer().getPhoneNumber());
+        dto.setDeliveryAddress(order.getDelivery().getDeliveryAddress().toString());
+        dto.setOrderDate(order.getOrderDate());
+        return dto;
     }
 }
 

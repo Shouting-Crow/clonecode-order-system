@@ -53,7 +53,7 @@
     <tbody>
     <tr th:each="order : ${orders}">
         <td th:text="${order.orderId}">주문번호</td>
-        <td th:text="${order.orderDate}">날짜</td>
+        <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}">날짜</td>
         <td th:text="${order.itemName}">상품이름</td>
         <td th:text="${order.quantity}">구매수량</td>
         <td th:text="${order.totalPrice}">금액</td>

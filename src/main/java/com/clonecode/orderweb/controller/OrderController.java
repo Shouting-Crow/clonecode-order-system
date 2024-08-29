@@ -1,12 +1,10 @@
 package com.clonecode.orderweb.controller;
 
-import com.clonecode.orderweb.domain.Customer;
-import com.clonecode.orderweb.domain.DeliveryStatus;
-import com.clonecode.orderweb.domain.Item;
-import com.clonecode.orderweb.domain.Order;
+import com.clonecode.orderweb.domain.*;
 import com.clonecode.orderweb.dto.CustomerOrderDto;
 import com.clonecode.orderweb.dto.DeliveryDto;
 import com.clonecode.orderweb.dto.OrderItemDto;
+import com.clonecode.orderweb.dto.SellerOrderDto;
 import com.clonecode.orderweb.service.ItemService;
 import com.clonecode.orderweb.service.OrderService;
 import jakarta.servlet.http.HttpSession;
@@ -118,6 +116,36 @@ public class OrderController {
         return "redirect:/orders";
     }
 
+    @GetMapping("/seller/orders")
+    public String getSellerOrders(Model model,
+                                  HttpSession session){
+        Seller seller = (Seller) session.getAttribute("loginMember");
+        if (seller == null){
+            return "redirect:/login";
+        }
 
+        List<SellerOrderDto> orders = orderService.getOrdersBySellerId(seller.getId());
+        model.addAttribute("orders", orders);
+        return "seller/order-list";
+    }
+
+    @PostMapping("/seller/delivery")
+    public String deliveryOrder(@RequestParam(name = "orderId") Long orderId){
+        orderService.deliveryOrder(orderId);
+        return "redirect:/seller/orders";
+    }
+
+    @PostMapping("/seller/cancel")
+    public String cancelSellerOrder(@RequestParam(name = "orderId") Long orderId,
+                                    HttpSession session){
+        Seller seller = (Seller) session.getAttribute("loginMember");
+        if (seller == null){
+            return "redirect:/login";
+        }
+
+        orderService.cancelSellerOrder(orderId, seller.getId());
+
+        return "redirect:/seller/orders";
+    }
 
 }
