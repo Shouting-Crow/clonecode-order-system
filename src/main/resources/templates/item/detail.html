@@ -200,14 +200,21 @@
         </div>
     </div>
 
-    <!-- 구매 및 장바구니 버튼 -->
     <div class="purchase-options">
+        <!-- 구매하기 폼 -->
         <form id="purchaseForm" th:action="@{'/order'}" method="get">
             <input type="hidden" name="itemId" th:value="${itemDetail.id}">
             <input type="number" id="quantity" name="quantity" min="1" max="100" value="1">
             <button class="btn-buy">구매하기</button>
         </form>
-        <button class="btn-cart">장바구니 담기</button>
+
+        <!-- 장바구니 담기 폼 -->
+        <form id="cartForm" th:action="@{'/cart/add'}" method="post">
+            <input type="hidden" name="itemId" th:value="${itemDetail.id}">
+            <input type="hidden" name="customerId" th:value="${loginMember.id}">
+            <input type="hidden" id="cartQuantity" name="cartQuantity" value="1">
+            <button type="submit" class="btn-cart">장바구니 담기</button>
+        </form>
     </div>
 
     <!-- 추가 이미지 및 설명 -->
@@ -265,5 +272,10 @@
            th:href="@{'/item/detail/' + ${itemDetail.id} + '?page=' + ${pagedReviews.number + 1} + '&size=' + ${pagedReviews.size}}">다음</a>
     </div>
 </div>
+<script>
+    document.getElementById("quantity").addEventListener("input", function() {
+        document.getElementById("cartQuantity").value = this.value;
+    });
+</script>
 </body>
 </html>

@@ -39,4 +39,7 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private List<Review> reviews;
 
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Cart cart;
+
 }
