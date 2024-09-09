@@ -54,9 +54,27 @@
     <tr th:each="order : ${orders}">
         <td th:text="${order.orderId}">주문번호</td>
         <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}">날짜</td>
-        <td th:text="${order.itemName}">상품이름</td>
-        <td th:text="${order.quantity}">구매수량</td>
-        <td th:text="${order.totalPrice}">금액</td>
+        <td>
+            <ul>
+                <li th:each="orderItem : ${order.orderItems}">
+                    <span th:text="${orderItem.itemName}"></span>
+                </li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li th:each="orderItem : ${order.orderItems}">
+                    <span th:text="${orderItem.quantity}"></span>
+                </li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li th:each="orderItem : ${order.orderItems}">
+                    <span th:text="${orderItem.price}"></span>
+                </li>
+            </ul>
+        </td>
         <td>
             <span th:if="${order.orderStatus == 'FINISHED'}">주문완료</span>
             <span th:if="${order.orderStatus == 'CANCELED'}">취소</span>

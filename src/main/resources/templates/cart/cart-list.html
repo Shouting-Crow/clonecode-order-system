@@ -104,7 +104,10 @@
   </div>
 
   <div class="cart-actions">
-    <a href="/checkout" class="btn-buy">구매하기</a>
+    <form th:action="@{/cart/checkout}" method="post">
+      <input type="hidden" name="customerId" th:value="${customerId}">
+      <button type="submit" class="btn-buy">구매하기</button>
+    </form>
   </div>
 </div>
 </body>

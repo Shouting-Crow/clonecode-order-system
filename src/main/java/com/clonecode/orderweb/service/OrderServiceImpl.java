@@ -1,15 +1,13 @@
 package com.clonecode.orderweb.service;
 
 import com.clonecode.orderweb.domain.*;
-import com.clonecode.orderweb.dto.CustomerOrderDto;
-import com.clonecode.orderweb.dto.DeliveryDto;
-import com.clonecode.orderweb.dto.OrderItemDto;
-import com.clonecode.orderweb.dto.SellerOrderDto;
+import com.clonecode.orderweb.dto.*;
 import com.clonecode.orderweb.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +21,8 @@ public class OrderServiceImpl implements OrderService{
     private final ItemRepository itemRepository;
     private final DeliveryRepository deliveryRepository;
     private final PaymentRepository paymentRepository;
+
+    private final CartService cartService;
 
     @Override
     @Transactional
@@ -83,13 +83,17 @@ public class OrderServiceImpl implements OrderService{
             customerOrderDto.setOrderDate(order.getOrderDate());
             customerOrderDto.setOrderStatus(order.getOrderStatus().toString());
 
-            OrderItem orderItem = order.getOrderItems().get(0);
-            customerOrderDto.setItemId(orderItem.getId());
-            customerOrderDto.setItemName(orderItem.getItem().getName());
-            customerOrderDto.setThumbnailImage(orderItem.getItem().getThumbnailImage());
-            customerOrderDto.setPrice(orderItem.getOrderPrice());
-            customerOrderDto.setQuantity(orderItem.getOrderCount());
-            customerOrderDto.setTotalPrice(orderItem.getOrderPrice() * orderItem.getOrderCount());
+            List<OrderItemDto> orderItemDtos = order.getOrderItems().stream()
+                    .map(orderItem -> {
+                        OrderItemDto orderItemDto = new OrderItemDto();
+                        orderItemDto.setItemId(orderItem.getItem().getId());
+                        orderItemDto.setItemName(orderItem.getItem().getName());
+                        orderItemDto.setQuantity(orderItem.getOrderCount());
+                        orderItemDto.setPrice(orderItem.getOrderPrice());
+                        return orderItemDto;
+                    }).toList();
+
+            customerOrderDto.setOrderItems(orderItemDtos);
 
             return customerOrderDto;
         }).toList();
@@ -150,6 +154,35 @@ public class OrderServiceImpl implements OrderService{
 
         order.setOrderStatus(OrderStatus.CANCELED);
         orderRepository.save(order);
+    }
+
+    @Override
+    @Transactional
+    public void createOrdersFromCart(Long customerId, List<CartOrderDto> cartOrderDtos) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        Order order = new Order();
+        order.setCustomer(customer);
+        order.setOrderDate(LocalDateTime.now());
+        order.setOrderStatus(OrderStatus.FINISHED);
+
+        for (CartOrderDto cartOrderDto : cartOrderDtos) {
+            Item item = itemRepository.findById(cartOrderDto.getItemId())
+                    .orElseThrow(() -> new IllegalArgumentException("제품 정보를 찾을 수 없습니다."));
+
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setItem(item);
+            orderItem.setOrderCount((long)cartOrderDto.getQuantity());
+            orderItem.setOrderPrice(cartOrderDto.getPrice() * cartOrderDto.getQuantity());
+
+            order.getOrderItems().add(orderItem);
+        }
+
+        orderRepository.save(order);
+
+        cartService.clearCart(customerId);
     }
 
     private SellerOrderDto convertToSellerOrderDto(Order order){

@@ -2,7 +2,9 @@ package com.clonecode.orderweb.controller;
 
 import com.clonecode.orderweb.domain.CartItem;
 import com.clonecode.orderweb.dto.CartItemDto;
+import com.clonecode.orderweb.dto.CartOrderDto;
 import com.clonecode.orderweb.service.CartService;
+import com.clonecode.orderweb.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -22,12 +24,14 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
+    private final OrderService orderService;
 
     @GetMapping("/cart")
     public String viewCart(@RequestParam(name = "customerId") Long customerId,
                            Model model) {
         List<CartItem> cartItems = cartService.getCartItems(customerId);
         model.addAttribute("cartItems", cartItems);
+        model.addAttribute("customerId", customerId);
 
         BigDecimal totalPrice = cartItems.stream()
                 .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getCartQuantity())))
@@ -48,6 +52,18 @@ public class CartController {
         redirectAttributes.addFlashAttribute("message", "제품이 장바구니에 추가되었습니다.");
 
         return "redirect:/cart";
+    }
+
+    @PostMapping("/cart/checkout")
+    public String checkoutCart(@RequestParam(name = "customerId") Long customerId,
+                               RedirectAttributes redirectAttributes){
+        List<CartOrderDto> cartOrderDtos = cartService.getCartItemsForOrder(customerId);
+
+        orderService.createOrdersFromCart(customerId, cartOrderDtos);
+
+        redirectAttributes.addFlashAttribute("message", "주문이 완료되었습니다.");
+
+        return "redirect:/orders";
     }
 
 }

@@ -1,10 +1,7 @@
 package com.clonecode.orderweb.service;
 
 import com.clonecode.orderweb.domain.Order;
-import com.clonecode.orderweb.dto.CustomerOrderDto;
-import com.clonecode.orderweb.dto.DeliveryDto;
-import com.clonecode.orderweb.dto.OrderItemDto;
-import com.clonecode.orderweb.dto.SellerOrderDto;
+import com.clonecode.orderweb.dto.*;
 
 import java.util.List;
 
@@ -16,4 +13,5 @@ public interface OrderService {
     List<SellerOrderDto> getOrdersBySellerId(Long sellerId);
     void deliveryOrder(Long orderId);
     void cancelSellerOrder(Long orderId, Long sellerId);
+    void createOrdersFromCart(Long customerId, List<CartOrderDto> cartOrderDtos);
 }

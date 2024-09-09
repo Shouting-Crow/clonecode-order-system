@@ -5,6 +5,8 @@ import com.clonecode.orderweb.domain.CartItem;
 import com.clonecode.orderweb.domain.Customer;
 import com.clonecode.orderweb.domain.Item;
 import com.clonecode.orderweb.dto.CartItemDto;
+import com.clonecode.orderweb.dto.CartOrderDto;
+import com.clonecode.orderweb.repository.CartItemRepository;
 import com.clonecode.orderweb.repository.CartRepository;
 import com.clonecode.orderweb.repository.CustomerRepository;
 import com.clonecode.orderweb.repository.ItemRepository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +25,7 @@ public class CartServiceImpl implements CartService{
     private final CartRepository cartRepository;
     private final ItemRepository itemRepository;
     private final CustomerRepository customerRepository;
+    private final CartItemRepository cartItemRepository;
 
     @Override
     public List<CartItem> getCartItems(Long customerId) {
@@ -63,6 +67,36 @@ public class CartServiceImpl implements CartService{
             cart.getCartItems().add(cartItem);
         }
 
+        cartRepository.save(cart);
+    }
+
+    @Override
+    public List<CartOrderDto> getCartItemsForOrder(Long customerId) {
+        Cart cart = cartRepository.findByCustomerId(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("장바구니를 찾을 수 없습니다."));
+
+        List<CartOrderDto> cartOrderDtos = new ArrayList<>();
+
+        for (CartItem cartItem : cart.getCartItems()) {
+            CartOrderDto cartOrderDto = new CartOrderDto();
+            cartOrderDto.setCartItemId(cartItem.getId());
+            cartOrderDto.setItemId(cartItem.getItem().getId());
+            cartOrderDto.setQuantity(cartItem.getCartQuantity());
+            cartOrderDto.setPrice(cartItem.getPrice().longValue());
+
+            cartOrderDtos.add(cartOrderDto);
+        }
+
+        return cartOrderDtos;
+    }
+
+    @Override
+    @Transactional
+    public void clearCart(Long customerId) {
+        Cart cart = cartRepository.findByCustomerId(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("장바구니를 찾을 수 없습니다."));
+        cartItemRepository.deleteAll(cart.getCartItems());
+        cart.getCartItems().clear();
         cartRepository.save(cart);
     }
 }

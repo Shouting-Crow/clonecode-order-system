@@ -4,6 +4,7 @@ import com.clonecode.orderweb.domain.OrderStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class CustomerOrderDto {
@@ -17,4 +18,6 @@ public class CustomerOrderDto {
     private String paymentMethod;
     private LocalDateTime orderDate;
     private String orderStatus;
+
+    private List<OrderItemDto> orderItems;
 }
