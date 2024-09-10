@@ -46,6 +46,10 @@
                 <li class="nav-item" th:if="${loginMember != null}">
                     <a class="nav-link btn btn-outline-primary" th:if="${loginMember instanceof T(com.clonecode.orderweb.domain.Customer)}" href="/orders">내 주문 내역 보기</a>
                     <a class="nav-link btn btn-outline-primary" th:if="${loginMember instanceof T(com.clonecode.orderweb.domain.Seller)}" href="/seller/orders">주문 내역 보기</a>
+                    <form th:action="@{/cart}" method="get">
+                        <input type="hidden" name="customerId" th:value="${loginMember.id}">
+                        <button type="submit" class="nav-link btn btn-outline-primary">장바구니 보기</button>
+                    </form>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link btn btn-outline-danger" href="/logout">로그아웃</a>

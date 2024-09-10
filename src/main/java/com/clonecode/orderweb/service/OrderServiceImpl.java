@@ -158,7 +158,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     @Transactional
-    public void createOrdersFromCart(Long customerId, List<CartOrderDto> cartOrderDtos) {
+    public void createOrdersFromCart(Long customerId, List<CartOrderDto> cartOrderDtos, Address address) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
@@ -166,6 +166,11 @@ public class OrderServiceImpl implements OrderService{
         order.setCustomer(customer);
         order.setOrderDate(LocalDateTime.now());
         order.setOrderStatus(OrderStatus.FINISHED);
+
+        Delivery delivery = new Delivery();
+        delivery.setDeliveryAddress(address);
+        delivery.setOrder(order);
+        order.setDelivery(delivery);
 
         for (CartOrderDto cartOrderDto : cartOrderDtos) {
             Item item = itemRepository.findById(cartOrderDto.getItemId())
@@ -197,6 +202,17 @@ public class OrderServiceImpl implements OrderService{
         dto.setCustomerPhoneNumber(order.getCustomer().getPhoneNumber());
         dto.setDeliveryAddress(order.getDelivery().getDeliveryAddress().toString());
         dto.setOrderDate(order.getOrderDate());
+
+        List<OrderItemDto> orderItems = order.getOrderItems().stream()
+                .map(orderItem -> new OrderItemDto(
+                        orderItem.getItem().getId(),
+                        orderItem.getItem().getName(),
+                        orderItem.getOrderCount(),
+                        orderItem.getOrderPrice() * orderItem.getOrderCount()
+                )).toList();
+
+        dto.setOrderItems(orderItems);
+
         return dto;
     }
 }

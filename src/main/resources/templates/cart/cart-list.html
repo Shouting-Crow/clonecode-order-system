@@ -106,8 +106,17 @@
   <div class="cart-actions">
     <form th:action="@{/cart/checkout}" method="post">
       <input type="hidden" name="customerId" th:value="${customerId}">
+      <div>
+        <label for="city">도시</label>
+        <input type="text" id="city" name="city" placeholder="도시명 입력" required>
+      </div>
+      <div>
+        <label for="streetAddress">도로명 주소</label>
+        <input type="text" id="streetAddress" name="streetAddress" placeholder="도로명 주소 입력" required>
+      </div>
       <button type="submit" class="btn-buy">구매하기</button>
     </form>
+    <a th:href="@{/}" class="btn-buy">홈으로 돌아가기</a>
   </div>
 </div>
 </body>

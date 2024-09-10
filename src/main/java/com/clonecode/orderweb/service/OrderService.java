@@ -1,5 +1,6 @@
 package com.clonecode.orderweb.service;
 
+import com.clonecode.orderweb.domain.Address;
 import com.clonecode.orderweb.domain.Order;
 import com.clonecode.orderweb.dto.*;
 
@@ -13,5 +14,5 @@ public interface OrderService {
     List<SellerOrderDto> getOrdersBySellerId(Long sellerId);
     void deliveryOrder(Long orderId);
     void cancelSellerOrder(Long orderId, Long sellerId);
-    void createOrdersFromCart(Long customerId, List<CartOrderDto> cartOrderDtos);
+    void createOrdersFromCart(Long customerId, List<CartOrderDto> cartOrderDtos, Address address);
 }

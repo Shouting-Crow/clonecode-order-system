@@ -1,8 +1,12 @@
 package com.clonecode.orderweb.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
 @Data
+@NoArgsConstructor
 public class OrderItemDto {
     private Long itemId;
     private Long customerId;
@@ -13,4 +17,11 @@ public class OrderItemDto {
     private Long totalPrice;
     private String paymentMethod;
     private String additionalPaymentMethod;
+
+    public OrderItemDto(Long itemId, String itemName, Long totalPrice, Long quantity) {
+        this.itemId = itemId;
+        this.itemName = itemName;
+        this.totalPrice = totalPrice;
+        this.quantity = quantity;
+    }
 }

@@ -3,6 +3,7 @@ package com.clonecode.orderweb.dto;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class SellerOrderDto {
@@ -16,4 +17,6 @@ public class SellerOrderDto {
     private String customerPhoneNumber;
     private String deliveryAddress;
     private LocalDateTime orderDate;
+
+    private List<OrderItemDto> orderItems;
 }

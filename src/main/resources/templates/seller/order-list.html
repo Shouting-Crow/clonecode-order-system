@@ -21,6 +21,15 @@
         .order-status {
             font-weight: bold;
         }
+
+        .order-item-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .order-item-list li {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -45,9 +54,24 @@
         <tr th:each="order : ${orders}">
             <td th:text="${order.orderId}">주문번호</td>
             <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}"></td>
-            <td th:text="${order.itemName}">상품이름</td>
-            <td th:text="${order.quantity}">구매수량</td>
-            <td th:text="${order.totalPrice}">금액</td>
+
+            <!-- 상품 이름, 수량, 금액을 하나의 셀에 리스트로 표현 -->
+            <td>
+                <ul class="order-item-list">
+                    <li th:each="item : ${order.orderItems}" th:text="${item.itemName}">상품이름</li>
+                </ul>
+            </td>
+            <td>
+                <ul class="order-item-list">
+                    <li th:each="item : ${order.orderItems}" th:text="${item.quantity}">구매수량</li>
+                </ul>
+            </td>
+            <td>
+                <ul class="order-item-list">
+                    <li th:each="item : ${order.orderItems}" th:text="${item.totalPrice}">금액</li>
+                </ul>
+            </td>
+
             <td th:text="${order.customerName}">구매자 이름</td>
             <td th:text="${order.customerPhoneNumber}">구매자 전화번호</td>
             <td th:text="${order.deliveryAddress}">배송 주소</td>
