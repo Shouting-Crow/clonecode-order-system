@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -134,6 +132,17 @@ public class OrderServiceImpl implements OrderService{
     public void deliveryOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+
+        for (OrderItem orderItem : order.getOrderItems()) {
+            Item item = orderItem.getItem();
+
+            if (item.getStockQuantity() < orderItem.getOrderCount()){
+                throw new IllegalArgumentException("재고 부족으로 배송을 할 수 없습니다.");
+            }
+
+            item.setStockQuantity((int) (item.getStockQuantity() - orderItem.getOrderCount()));
+        }
+
         order.setOrderStatus(OrderStatus.DELIVERING);
         orderRepository.save(order);
     }
@@ -207,8 +216,9 @@ public class OrderServiceImpl implements OrderService{
                 .map(orderItem -> new OrderItemDto(
                         orderItem.getItem().getId(),
                         orderItem.getItem().getName(),
-                        orderItem.getOrderCount(),
-                        orderItem.getOrderPrice() * orderItem.getOrderCount()
+                        orderItem.getItem().getPrice(),
+                        orderItem.getOrderPrice() * orderItem.getOrderCount(),
+                        orderItem.getOrderCount()
                 )).toList();
 
         dto.setOrderItems(orderItems);

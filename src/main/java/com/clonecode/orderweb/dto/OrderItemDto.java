@@ -18,9 +18,10 @@ public class OrderItemDto {
     private String paymentMethod;
     private String additionalPaymentMethod;
 
-    public OrderItemDto(Long itemId, String itemName, Long totalPrice, Long quantity) {
+    public OrderItemDto(Long itemId, String itemName, Long price, Long totalPrice, Long quantity) {
         this.itemId = itemId;
         this.itemName = itemName;
+        this.price = price;
         this.totalPrice = totalPrice;
         this.quantity = quantity;
     }

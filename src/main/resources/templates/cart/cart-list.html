@@ -28,34 +28,76 @@
     }
 
     .cart-total {
-      text-align: right;
+      text-align: center;
       margin-top: 20px;
       font-weight: bold;
-      font-size: 1.2em;
+      font-size: 1.5em;
+    }
+
+    .cart-form {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .cart-form div {
+      margin-right: 15px;
+    }
+
+    .cart-form label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .cart-form input {
+      padding: 10px;
+      font-size: 1em;
+      width: 200px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
     }
 
     .cart-actions {
-      text-align: right;
+      display: flex;
+      justify-content: space-between;
       margin-top: 20px;
     }
 
-    .btn-buy, .btn-delete {
-      padding: 10px 15px;
-      background-color: #4CAF50;
+    .btn-buy, .btn-home {
+      padding: 10px 20px;
+      font-size: 1em;
       color: white;
       border: none;
       cursor: pointer;
       text-decoration: none;
       border-radius: 5px;
-      margin-right: 10px;
+    }
+
+    .btn-buy {
+      background-color: #4CAF50;
+    }
+
+    .btn-buy:hover {
+      background-color: #45a049;
+    }
+
+    .btn-home {
+      background-color: #007BFF;
+    }
+
+    .btn-home:hover {
+      background-color: #0056b3;
     }
 
     .btn-delete {
+      padding: 10px 15px;
       background-color: #f44336;
-    }
-
-    .btn-buy:hover, .btn-delete:hover {
-      background-color: #45a049;
+      color: white;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 5px;
     }
 
     .btn-delete:hover {
@@ -103,21 +145,23 @@
     <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')}"></span>
   </div>
 
-  <div class="cart-actions">
-    <form th:action="@{/cart/checkout}" method="post">
-      <input type="hidden" name="customerId" th:value="${customerId}">
-      <div>
-        <label for="city">도시</label>
-        <input type="text" id="city" name="city" placeholder="도시명 입력" required>
-      </div>
-      <div>
-        <label for="streetAddress">도로명 주소</label>
-        <input type="text" id="streetAddress" name="streetAddress" placeholder="도로명 주소 입력" required>
-      </div>
+  <form class="cart-form" th:action="@{/cart/checkout}" method="post">
+    <input type="hidden" name="customerId" th:value="${customerId}">
+
+    <div>
+      <label for="city">도시</label>
+      <input type="text" id="city" name="city" placeholder="도시명 입력" required>
+    </div>
+    <div>
+      <label for="streetAddress">도로명 주소</label>
+      <input type="text" id="streetAddress" name="streetAddress" placeholder="도로명 주소 입력" required>
+    </div>
+
+    <div class="cart-actions">
+      <a th:href="@{/}" class="btn-home">홈으로 돌아가기</a>
       <button type="submit" class="btn-buy">구매하기</button>
-    </form>
-    <a th:href="@{/}" class="btn-buy">홈으로 돌아가기</a>
-  </div>
+    </div>
+  </form>
 </div>
 </body>
 </html>

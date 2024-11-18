@@ -164,14 +164,11 @@
     </style>
 </head>
 <body>
-<!-- 상단 홈으로 돌아가는 버튼 -->
 <div class="navbar">
     <a href="/" class="btn-home">홈페이지</a>
 </div>
 
-<!-- 상세 페이지 메인 섹션 -->
 <div class="container">
-    <!-- 상품 이미지 및 정보 -->
     <div class="item-header">
         <div class="thumbnail">
             <img th:src="@{|${itemDetail.thumbnailImage}|}" alt="상품 섬네일">
@@ -201,14 +198,12 @@
     </div>
 
     <div class="purchase-options">
-        <!-- 구매하기 폼 -->
         <form id="purchaseForm" th:action="@{'/order'}" method="get">
             <input type="hidden" name="itemId" th:value="${itemDetail.id}">
             <input type="number" id="quantity" name="quantity" min="1" max="100" value="1">
             <button class="btn-buy">구매하기</button>
         </form>
 
-        <!-- 장바구니 담기 폼 -->
         <form id="cartForm" th:action="@{'/cart/add'}" method="post">
             <input type="hidden" name="itemId" th:value="${itemDetail.id}">
             <input type="hidden" name="customerId" th:value="${loginMember.id}">
@@ -217,7 +212,6 @@
         </form>
     </div>
 
-    <!-- 추가 이미지 및 설명 -->
     <div class="additional-images">
         <h3>추가 이미지</h3>
         <div class="image-list">
@@ -230,14 +224,12 @@
         <p th:text="${itemDetail.description}"></p>
     </div>
 
-    <!-- 판매자 정보 -->
     <div class="seller-info">
         <h4>판매자 정보</h4>
         <p th:text="'이름: ' + ${itemDetail.sellerName}"></p>
         <p th:text="'연락처: ' + ${itemDetail.sellerPhoneNumber}"></p>
     </div>
 
-    <!-- 리뷰 섹션 -->
     <div class="reviews-section">
         <div class="reviews-header">
             <h3>리뷰</h3>
