@@ -33,17 +33,16 @@
 * 세션을 통한 로그인 유지 및 로그아웃
 
 # 👓 뷰
-![홈페이지](https://github.com/user-attachments/assets/09df3b9a-72ab-468d-8326-2e6a547a0c8f)
-![제품등록](https://github.com/user-attachments/assets/e82ec16f-a578-446c-9f29-8a1c32504f2b)
-![제품리스트와 상세](https://github.com/user-attachments/assets/981e69b1-540f-44da-ac09-87c844f66e75)
-![주문과 장바구니](https://github.com/user-attachments/assets/95e9652a-6885-45f2-a3ca-3dc070757018)
-![리뷰작성](https://github.com/user-attachments/assets/da95e782-f371-4700-83b5-b5518a6d1e18)
-![판매자주문리스트](https://github.com/user-attachments/assets/3e509350-5475-42b5-9f41-c0c7267545d7)
-
-
-
-
-
+![1](https://github.com/user-attachments/assets/17935d08-8662-4613-97a1-dd873480d762)
+![2](https://github.com/user-attachments/assets/69f09ab7-6c03-400f-95a7-678b21eeb79d)
+![3](https://github.com/user-attachments/assets/dc357557-6a3d-4ba4-9241-8638cc705210)
+![4](https://github.com/user-attachments/assets/d75fffb0-b553-4a6c-8d77-3780b40d0f91)
+![5](https://github.com/user-attachments/assets/45124fd6-ee18-404c-9271-0042c2cc13a4)
+![6](https://github.com/user-attachments/assets/b52e3ad5-5c44-46e8-aab0-e6173cb7f17e)
+![7](https://github.com/user-attachments/assets/6991eddb-2194-4e08-9a49-c45ce1dd05be)
+![10](https://github.com/user-attachments/assets/8b272785-ebb6-4a58-9b6a-72a91de0790e)
+![8](https://github.com/user-attachments/assets/438d27d8-928d-4906-a466-cc91e0006905)
+![9](https://github.com/user-attachments/assets/f45368ab-51b5-4522-b9e8-bd22328588a1)
 
 
 # 🔧 개발 환경
