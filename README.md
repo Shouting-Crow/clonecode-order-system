@@ -32,6 +32,19 @@
 ### 회원가입/로그인/로그아웃
 * 세션을 통한 로그인 유지 및 로그아웃
 
+# 👓 뷰
+![홈페이지](https://github.com/user-attachments/assets/09df3b9a-72ab-468d-8326-2e6a547a0c8f)
+![제품등록](https://github.com/user-attachments/assets/e82ec16f-a578-446c-9f29-8a1c32504f2b)
+![제품리스트와 상세](https://github.com/user-attachments/assets/981e69b1-540f-44da-ac09-87c844f66e75)
+![주문과 장바구니](https://github.com/user-attachments/assets/95e9652a-6885-45f2-a3ca-3dc070757018)
+![리뷰작성](https://github.com/user-attachments/assets/da95e782-f371-4700-83b5-b5518a6d1e18)
+![판매자주문리스트](https://github.com/user-attachments/assets/3e509350-5475-42b5-9f41-c0c7267545d7)
+
+
+
+
+
+
 
 # 🔧 개발 환경
 * Java   </br>
@@ -80,7 +93,7 @@ C:.
 
 * Spring Boot 3.x.x  
 
-* MySQL 8.x  
+* MySQL 8.0
 
 **QueryDSL 설정**   </br>
 * src/main/generated 디렉터리 생성   
@@ -92,9 +105,9 @@ C:.
 
 MySQL에 접속 후 아래의 명령어로 데이터베이스와 사용자 생성.
 ```
-CREATE DATABASE board_db;  
+CREATE DATABASE shopping_db;  
 CREATE USER 'webuser'@'localhost' IDENTIFIED BY 'webuser';  
-GRANT ALL PRIVILEGES ON board_db.* TO 'webuser'@'localhost';
+GRANT ALL PRIVILEGES ON shopping_db.* TO 'webuser'@'localhost';
 ```
 
 * MySQL을 도커로 실행할 경우
@@ -106,7 +119,7 @@ services:
     container_name: mysql-container
     restart: always
     environment:
-      MYSQL_DATABASE: board_db
+      MYSQL_DATABASE: shopping_db
       MYSQL_USER: webuser
       MYSQL_PASSWORD: webuser
       MYSQL_ROOT_PASSWORD: rootpassword
