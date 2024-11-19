@@ -33,16 +33,26 @@
 * 세션을 통한 로그인 유지 및 로그아웃
 
 # 👓 뷰
-![1](https://github.com/user-attachments/assets/17935d08-8662-4613-97a1-dd873480d762)
-![2](https://github.com/user-attachments/assets/69f09ab7-6c03-400f-95a7-678b21eeb79d)
-![3](https://github.com/user-attachments/assets/dc357557-6a3d-4ba4-9241-8638cc705210)
-![4](https://github.com/user-attachments/assets/d75fffb0-b553-4a6c-8d77-3780b40d0f91)
-![5](https://github.com/user-attachments/assets/45124fd6-ee18-404c-9271-0042c2cc13a4)
-![6](https://github.com/user-attachments/assets/b52e3ad5-5c44-46e8-aab0-e6173cb7f17e)
-![7](https://github.com/user-attachments/assets/6991eddb-2194-4e08-9a49-c45ce1dd05be)
-![10](https://github.com/user-attachments/assets/8b272785-ebb6-4a58-9b6a-72a91de0790e)
-![8](https://github.com/user-attachments/assets/438d27d8-928d-4906-a466-cc91e0006905)
-![9](https://github.com/user-attachments/assets/f45368ab-51b5-4522-b9e8-bd22328588a1)
+* 홈페이지와 구매자 회원가입 </br>
+![1](https://github.com/user-attachments/assets/17935d08-8662-4613-97a1-dd873480d762) </br>
+* 판매자 회원가입과 로그인 </br>
+![2](https://github.com/user-attachments/assets/69f09ab7-6c03-400f-95a7-678b21eeb79d) </br>
+* 판매자 로그인 홈페이지와 제품 등록 </br>
+![3](https://github.com/user-attachments/assets/dc357557-6a3d-4ba4-9241-8638cc705210) </br>
+* 등록된 상품 목록과 상품 수정 </br>
+![4](https://github.com/user-attachments/assets/d75fffb0-b553-4a6c-8d77-3780b40d0f91) </br>
+* 구매자 로그인 홈페이지와 상품 리스트 </br>
+![5](https://github.com/user-attachments/assets/45124fd6-ee18-404c-9271-0042c2cc13a4) </br>
+* 제품 상세 페이지와 구매 </br>
+![6](https://github.com/user-attachments/assets/b52e3ad5-5c44-46e8-aab0-e6173cb7f17e) </br>
+* 주문 성공 페이지와 장바구니 </br>
+![7](https://github.com/user-attachments/assets/6991eddb-2194-4e08-9a49-c45ce1dd05be) </br>
+* 리뷰 작성과 반영된 제품 상세 페이지 </br>
+![10](https://github.com/user-attachments/assets/8b272785-ebb6-4a58-9b6a-72a91de0790e) </br>
+* 구매자 주문 내역(취소 및 삭제 가능) </br>
+![8](https://github.com/user-attachments/assets/438d27d8-928d-4906-a466-cc91e0006905) </br>
+* 판매자 주문 리스트(배송 결정 및 취소 가능) </br>
+![9](https://github.com/user-attachments/assets/f45368ab-51b5-4522-b9e8-bd22328588a1) </br>
 
 
 # 🔧 개발 환경
