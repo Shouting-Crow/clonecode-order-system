@@ -56,10 +56,10 @@
 * Thymeleaf </br>
 
 # 📝 다이어그램
-(초기 설정에서 조금 더 추가 되었기에 최종 도메인과는 조금 다릅니다)
-![order-system-domain](https://github.com/user-attachments/assets/397ab660-1a29-4169-b6fb-e01947dc4e07)   
+ ![order-system drawio](https://github.com/user-attachments/assets/d60afcc3-f4d6-4b1f-bbed-f791a0240043)
 
-추후 각 상태를 나타내는 클래스와 리뷰 작성을 위한 도메인을 추가했습니다.   
+
+   
 
 # 📁 파일 구조
 ```
