@@ -4,7 +4,7 @@ spring:
     suffix: .html
 
   datasource:
-    url: jdbc:mysql://localhost:3306/board_db
+    url: jdbc:mysql://localhost:3306/shopping_db
     username: webuser
     password: webuser
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -21,3 +21,6 @@ server:
   servlet:
     session:
       tracking-modes: cookie
+  error:
+    whitelabel:
+      enabled: false

@@ -12,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
@@ -78,6 +75,18 @@ public class CartController {
         redirectAttributes.addFlashAttribute("message", "주문이 완료되었습니다.");
 
         return "redirect:/orders";
+    }
+
+    @PostMapping("/cart/remove/{cartItemId}")
+    public String removeItemFromCart(@PathVariable Long cartItemId,
+                                     @RequestParam(name = "customerId") Long customerId,
+                                     RedirectAttributes redirectAttributes) {
+        cartService.removeItemFromCart(cartItemId, customerId);
+
+        redirectAttributes.addAttribute("customerId", customerId);
+        redirectAttributes.addFlashAttribute("message", "장바구니에서 제품이 삭제되었습니다.");
+
+        return "redirect:/cart";
     }
 
 }

@@ -99,4 +99,16 @@ public class CartServiceImpl implements CartService{
         cart.getCartItems().clear();
         cartRepository.save(cart);
     }
+
+    @Override
+    public void removeItemFromCart(Long cartItemId, Long customerId) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 장바구니가 존재하지 않습니다."));
+
+        if (!cartItem.getCart().getCustomer().getId().equals(customerId)) {
+            throw new IllegalArgumentException("장바구니 항목 삭제 권한이 없습니다.");
+        }
+
+        cartItemRepository.delete(cartItem);
+    }
 }

@@ -8,7 +8,7 @@
 <body>
 <div class="container mt-5">
   <h2>접근할 수 없습니다</h2>
-  <p>이 페이지는 구매자 회원만 접근 가능합니다. 로그인 후 이용해 주세요.</p>
+  <p th:text="${errorMessage}">이 페이지는 구매자 회원만 접근 가능합니다. 로그인 후 이용해 주세요.</p>
   <a href="/login" class="btn btn-primary">로그인 페이지로 이동</a>
   <a href="/" class="btn btn-secondary">홈으로 돌아가기</a>
 </div>

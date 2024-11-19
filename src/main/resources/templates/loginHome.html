@@ -36,35 +36,31 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item w-100 text-center">
+            <ul class="navbar-nav ms-auto d-flex align-items-center">
+                <li class="nav-item">
                     <span class="nav-link" th:if="${loginMember != null}">환영합니다, <span th:text="${loginMember.name}"></span>님!</span>
                 </li>
-                <li class="nav-item" th:if="${loginMember instanceof T(com.clonecode.orderweb.domain.Seller)}">
-                    <div class="d-flex justify-content-center">
-                        <a class="nav-link btn btn-outline-primary me-2" href="/seller/orders">주문 내역 보기</a>
-                        <div class="dropdown">
-                            <a class="nav-link dropdown-toggle btn btn-outline-secondary" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                상품 관리
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="/item/register">상품 등록</a></li>
-                                <li><a class="dropdown-item" href="/item/register-list">상품 목록</a></li>
-                            </ul>
-                        </div>
+                <li class="nav-item d-flex align-items-center" th:if="${loginMember instanceof T(com.clonecode.orderweb.domain.Seller)}">
+                    <a class="nav-link btn btn-outline-primary me-2" href="/seller/orders">주문 내역 보기</a>
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle btn btn-outline-secondary" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            상품 관리
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/item/register">상품 등록</a></li>
+                            <li><a class="dropdown-item" href="/item/register-list">상품 목록</a></li>
+                        </ul>
                     </div>
                 </li>
-                <li class="nav-item" th:if="${loginMember instanceof T(com.clonecode.orderweb.domain.Customer)}">
-                    <div class="d-flex justify-content-center">
-                        <a class="nav-link btn btn-outline-primary me-2" href="/orders">내 주문 내역 보기</a>
-                        <form th:action="@{/cart}" method="get" style="display:inline;">
-                            <input type="hidden" name="customerId" th:value="${loginMember.id}">
-                            <button type="submit" class="nav-link btn btn-outline-primary">장바구니 보기</button>
-                        </form>
-                    </div>
+                <li class="nav-item d-flex align-items-center" th:if="${loginMember instanceof T(com.clonecode.orderweb.domain.Customer)}">
+                    <a class="nav-link btn btn-outline-primary me-2" href="/orders">내 주문 내역 보기</a>
+                    <form th:action="@{/cart}" method="get" style="display:inline;">
+                        <input type="hidden" name="customerId" th:value="${loginMember.id}">
+                        <button type="submit" class="nav-link btn btn-outline-primary">장바구니 보기</button>
+                    </form>
                 </li>
-                <li class="nav-item w-100 text-center">
-                    <a class="nav-link btn btn-outline-danger" href="/logout">로그아웃</a>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-danger ms-2" href="/logout">로그아웃</a>
                 </li>
             </ul>
         </div>

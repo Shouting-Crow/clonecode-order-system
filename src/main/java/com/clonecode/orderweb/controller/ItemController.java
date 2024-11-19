@@ -188,13 +188,14 @@ public class ItemController {
                                 Model model,
                                 HttpSession session){
 
-        Customer loginMember = (Customer) session.getAttribute("loginMember");
+        Object loginMember = session.getAttribute("loginMember");
 
         if (loginMember == null || !(loginMember instanceof Customer)){
             return "redirect:/error/access-denied";
         }
 
-        model.addAttribute("loginMember", loginMember);
+        Customer customer = (Customer) loginMember;
+        model.addAttribute("loginMember", customer);
 
         Optional<ItemDetailDto> itemDetail = itemService.getItemDetail(itemId, PageRequest.of(page, size));
 

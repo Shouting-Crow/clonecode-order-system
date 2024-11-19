@@ -90,12 +90,14 @@
             <div class="product-price" th:text="${item.price} + '원'"></div>
             <div class="product-rating">
                 <span th:if="${item.averageRating > 0}"
-                      th:each="star : ${#numbers.sequence(1, T(java.lang.Math).round(item.averageRating))}">
-                    <img src="/images/star-filled.png" alt="★"></span>
-                <span th:if="${item.averageRating > 0}"
-                      th:each="star : ${#numbers.sequence(T(java.lang.Math).round(item.averageRating) + 1, 5)}">
-                    <img src="/images/star-empty.png" alt="☆"></span>
-                <span th:if="${item.averageRating == 0.0}">
+                      th:each="star : ${#numbers.sequence(1, T(java.lang.Math).floor(item.averageRating))}">
+                        <img src="/images/star-filled.png" alt="★">
+                </span>
+                <span th:if="${item.averageRating > 0 and T(java.lang.Math).floor(item.averageRating) < 5}"
+                      th:each="star : ${#numbers.sequence(T(java.lang.Math).floor(item.averageRating) + 1, 5)}">
+                        <img src="/images/star-empty.png" alt="☆">
+                </span>
+                <span th:if="${item.averageRating == 0}">
                     <span th:each="star : ${#numbers.sequence(1, 5)}">
                         <img src="/images/star-empty.png" alt="☆">
                     </span>

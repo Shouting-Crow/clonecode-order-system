@@ -133,6 +133,7 @@
       <td th:text="${#numbers.formatDecimal(cartItem.price.multiply(cartItem.cartQuantity), 0, 'COMMA', 0, 'POINT')}"></td>
       <td>
         <form th:action="@{'/cart/remove/' + ${cartItem.id}}" method="post">
+          <input type="hidden" name="customerId" th:value="${customerId}">
           <button type="submit" class="btn-delete">삭제</button>
         </form>
       </td>
