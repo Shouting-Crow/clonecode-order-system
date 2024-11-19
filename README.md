@@ -79,6 +79,7 @@ C:.
 │              ├─domain
 │              ├─dto
 │              ├─repository
+│              ├─security
 │              └─service              
 └─resources
     ├─static      
@@ -98,7 +99,7 @@ C:.
 * src/main/generated 디렉터리 생성   
 
 **MySQL 데이터베이스 설정**  
-+ 데이터베이스 이름: board_db  
++ 데이터베이스 이름: shopping_db
 
 + 사용자 이름/비밀번호 : webuser/webuser  
 
@@ -130,7 +131,13 @@ services:
 volumes:
   db_data:
 ```
-  해당 yml 도커 컴포즈 파일 사용.
+  해당 yml 도커 컴포즈 파일 사용.    
+
+**gradle 실행** </br>
+아래의 명령어로 애플리케이션을 구동하고 http://localhost:8080 주소에 접속하여 확인.
+```
+./gradlew bootRun
+```
 
 
 ### 상세 기록  
